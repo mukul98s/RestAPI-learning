@@ -1,20 +1,17 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.status(200).json({ message: "Get Goals" });
-});
+const {protect} = require("../middleware/authMildderware");
 
-router.post("/", (req, res) => {
-  res.status(200).json({ message: "Set Goals" });
-});
+const {
+  getGoals,
+  setGoals,
+  updateGoal,
+  deleteGoal,
+} = require("../controller/goalController");
 
-router.put("/:id", (req, res) => {
-  res.status(200).json({ message: `Update Goal ${req.params.id}` });
-});
-
-router.delete("/:id", (req, res) => {
-  res.status(200).json({ message: `Delete Goal ${req.params.id}` });
-});
+// this route will chain different methods on the same route
+router.route("/").get(protect, getGoals).post(protect, setGoals);
+router.route("/:id").put(protect, updateGoal).delete(protect, deleteGoal);
 
 module.exports = router;
